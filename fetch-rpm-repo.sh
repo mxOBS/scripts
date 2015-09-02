@@ -86,7 +86,19 @@ download() {
 				# then download
 				curl -k -o "$destdir/$filename" "$location" 1>/dev/null 2>/dev/null
 				if [ $? == 0 ]; then
-					status="Replaced"
+					# check if checksum matches now
+					matches=no
+					if [ "$chksumtype" = "sha256" ]; then
+						echo "$chksum $destdir/$filename" | sha256sum -c 2>/dev/null 1>/dev/null
+						if [ $? = 0 ]; then matches=yes; fi
+					fi
+
+					if [ "$matches" = "yes" ]; then
+						status="Replaced"
+					else
+						status="Failed"
+						rm -f $filename
+					fi
 				else
 					status="Failed"
 				fi
@@ -95,7 +107,19 @@ download() {
 			# download
 			curl -k -o "$destdir/$filename" "$location" 1>/dev/null 2>/dev/null
 			if [ $? == 0 ]; then
-				status="Done"
+				# check if checksum matches
+				matches=no
+				if [ "$chksumtype" = "sha256" ]; then
+					echo "$chksum $destdir/$filename" | sha256sum -c 2>/dev/null 1>/dev/null
+					[ $? = 0 ] && matches=yes
+				fi
+
+				if [ "$matches" = "yes" ]; then
+					status="Done"
+				else
+					status="Failed"
+					rm -f $filename
+				fi
 			else
 				status="Failed"
 			fi
