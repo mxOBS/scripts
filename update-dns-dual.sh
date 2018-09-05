@@ -27,7 +27,7 @@ printf "Detected IPv4=%s (%s), IPv6=%s (%s)\n" "$ipv4" "$last_ipv4" "$ipv6" "$la
 # update v4 if changed
 if [ "x$last_ipv4" != "x$ipv4" ]; then
 	echo "Updating IPv4"
-	printf -v url "http://ddnss.de/upd.php?key=%s&host=%s&ip=%s" "$key" "$host" "$ipv4"
+	printf -v url "https://dynv6.com/api/update?token=%s&hostname=%s&ipv4=%s" "$key" "$host" "$ipv4"
 	curl -k "$url"
 
 	# update state
@@ -36,7 +36,7 @@ fi
 # update v6 if changed
 if [ "x$last_ipv6" != "x$ipv6" ]; then
 echo "Updating IPv6"
-	printf -v url "http://ddnss.de/upd.php?key=%s&host=%s&ip6=%s" "$key" "$host" "$ipv6"
+	printf -v url "https://dynv6.com/api/update?token=%s&hostname=%s&ipv6=%s" "$key" "$host" "$ipv6"
 	curl -k "$url"
 
 	# update state
